@@ -11,6 +11,13 @@ I am a PhD student at the University of St Andrews, funded by NERC through the I
 
 ![William Spicer doing fieldwork]({{ "images/will and camera profile photo.jpeg" | relative_url }})
 
+<figure style="max-width: 650px; margin: 2em auto;">
+  <img src="{{ '/images/will and camera profile photo.jpeg' | relative_url }}"
+       alt="William Spicer doing fieldwork">
+  <figcaption>Fieldwork in Svalbard.</figcaption>
+</figure>
+
+
 Research
 ======
 Coming soon...
