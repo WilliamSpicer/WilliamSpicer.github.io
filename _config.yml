@@ -23,7 +23,7 @@ repository               : "WilliamSpicer/WilliamSpicer.github.io"
 #               Additional customization can be done by editing /_includes/author-profile.html
 author:
   # Biographic information
-  avatar           : "profile.png"
+  avatar           : "84d32ada-ea5c-41b4-b92c-b5ec6349b7f8.jpg" #"profile.png"
   name             : "Will Spicer"
   pronouns         : # example: "she/her"  
   bio              : "PhD Student in Glaciology"
