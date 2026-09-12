@@ -9,10 +9,23 @@ redirect_from:
 
 I am a PhD student at the University of St Andrews, funded by NERC through the IAPETUS2 Doctoral Training Partnership. My research combines high-fidelity numerical modelling and field observations to understand the physical processes underlying iceberg calving events. The project involves close collaboration and fieldwork associated with the University Centre in Svalbard (UNIS). 
 
+# How to add a figure in markdown file
 <figure style="max-width: 650px; margin: 2em auto;">
   <img src="{{ '/images/will and camera profile photo.jpeg' | relative_url }}"
        alt="William Spicer doing fieldwork">
   <figcaption>Fieldwork at Wahlenbergbreen, Svalbard (August 2026).</figcaption>
+</figure>
+
+<figure style="max-width: 650px; margin: 2em auto;">
+  <img src="{{ '/images/will-and-camera-profile-photo.jpeg' | relative_url }}"
+       alt="William Spicer doing fieldwork">
+  <figcaption>Fieldwork at Wahlenbergbreen, Svalbard (August 2026).</figcaption>
+</figure>
+
+<figure style="max-width: 650px; margin: 2em auto;">
+  <img src="{{ '/images/will-tuna-camera.jpeg' | relative_url }}"
+       alt="William Spicer doing fieldwork">
+  <figcaption>Fieldwork at Tunabreen, Svalbard (July 2026).</figcaption>
 </figure>
 
 Research
