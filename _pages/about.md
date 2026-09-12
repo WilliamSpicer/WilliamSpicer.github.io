@@ -15,13 +15,6 @@ I am a PhD student at the University of St Andrews, funded by NERC through the I
   <figcaption>Fieldwork at Wahlenbergbreen, Svalbard (August 2026).</figcaption>
 </figure>
 
-<figure style="max-width: 650px; margin: 2em auto;">
-  <img src="{{ '/images/will-and-camera-profile-photo.NEF' | relative_url }}"
-       alt="William Spicer doing fieldwork">
-  <figcaption>Fieldwork at Wahlenbergbreen, Svalbard (August 2026).</figcaption>
-</figure>
-
-
 Research
 ======
 Coming soon...
