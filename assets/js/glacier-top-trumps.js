@@ -79,7 +79,7 @@
         } else {
           computer.push.apply(computer, winnings);
           status.textContent = "The computer won this round.";
-          showResult("The computer wins this round", comparison + " It collects your " + losingCard.name + " card.", winningCard.fact);
+          showResult("The computer wins this round. It chose " + category.label + ". ", comparison + " It collects your " + losingCard.name + " card.", winningCard.fact);
           playerLeads = false;
         }
         updateCounts();
