@@ -5,9 +5,9 @@ permalink: /outreach/
 author_profile: true
 ---
 
-This is a first, simple test of a Greenlandic glacier Top Trumps game. Choose a stat when it is your turn; the higher value wins both cards. The sample names and numbers below are placeholders, ready to be replaced with facts from the paper cards.
+Play Greenlandic glacier Top Trumps. Choose a category on your turn; the higher value wins the round. Glacier names, Greenlandic names, facts, categories, and values are loaded from the card data CSV below.
 
-<section class="glacier-game" aria-labelledby="glacier-game-title">
+<section class="glacier-game" aria-labelledby="glacier-game-title" data-csv-url="{{ '/files/GreenlandCardData.csv' | relative_url }}">
   <style>
     .glacier-game { max-width: 760px; margin: 2rem auto; color: #17324d; }
     .glacier-game h2, .glacier-game h3 { margin-top: 0; }
@@ -30,7 +30,7 @@ This is a first, simple test of a Greenlandic glacier Top Trumps game. Choose a 
 
   <h2 id="glacier-game-title">Glacier Top Trumps: a first test</h2>
   <p>Cards in your hand: <strong id="player-count">0</strong> &nbsp;|&nbsp; Computer: <strong id="computer-count">0</strong></p>
-  <p id="game-status" class="glacier-game__status" role="status" aria-live="polite">Press “Start game” to shuffle and deal the sample cards.</p>
+  <p id="game-status" class="glacier-game__status" role="status" aria-live="polite">Loading glacier cards from the CSV…</p>
   <div class="glacier-game__board" aria-live="polite">
     <article class="glacier-game__card" id="player-card"><h3>Your card</h3><p>Waiting to deal…</p></article>
     <article class="glacier-game__card" id="computer-card"><h3>Computer's card</h3><p>Waiting to deal…</p></article>
@@ -44,8 +44,8 @@ This is a first, simple test of a Greenlandic glacier Top Trumps game. Choose a 
   <h3 id="choice-heading">Choose a category</h3>
   <div class="glacier-game__choices" id="category-choices" aria-labelledby="choice-heading"></div>
   <button type="button" class="glacier-game__new" id="new-game">Start game / deal again</button>
-  <p class="glacier-game__note">Demo stats and facts are placeholders, not real glacier measurements or facts. The highest number wins. If there is a tie, the cards go into a shared pile and the next round's winner takes them.</p>
+  <p class="glacier-game__note">Values and facts come from the CSV. A higher numeric value wins each category. Blank or non-numeric values are skipped for that round. If there is a tie, those cards go into a shared pile and the next round's winner takes them.</p>
 
 </section>
 
-<script src="{{ '/assets/js/glacier-top-trumps.js' | relative_url }}?v=4"></script>
+<script src="{{ '/assets/js/glacier-top-trumps.js' | relative_url }}?v=5"></script>

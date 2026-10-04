@@ -1,20 +1,15 @@
     (function () {
       var categories = [
-        { key: "length", label: "Length (km)" },
-        { key: "speed", label: "Flow speed (m/day)" },
-        { key: "height", label: "Ice-front height (m)" }
+        { key: "Frontal velocity (mean 1985–2024, m/yr)", label: "Frontal velocity (1985–2024 mean, m/yr)" },
+        { key: "Frontal Ablation 2010-2020 (Gt/yr)", label: "Frontal ablation (2010–2020, Gt/yr)" },
+        { key: "terminus position change", label: "Terminus position change" },
+        { key: "area km2 geodetic", label: "Geodetic area (km²)" },
+        { key: "population in area", label: "Population in the area" },
+        { key: "Mass balance 2000–2017 (Gt)", label: "Mass balance (2000–2017, Gt)" },
+        { key: "number of publications", label: "Number of publications" },
+        { key: "runoff (RACMO, 2015–2024, Gt)", label: "Runoff (RACMO 2015–2024, Gt)" }
       ];
-      // Replace these illustrative values with the facts from your cards.
-      var glacierCards = [
-        { name: "Demo Glacier A", length: 42, speed: 3.2, height: 85, fact: "Replace this with a verified fact about this glacier." },
-        { name: "Demo Glacier B", length: 28, speed: 5.1, height: 62, fact: "Replace this with a verified fact about this glacier." },
-        { name: "Demo Glacier C", length: 55, speed: 2.4, height: 110, fact: "Replace this with a verified fact about this glacier." },
-        { name: "Demo Glacier D", length: 36, speed: 4.3, height: 74, fact: "Replace this with a verified fact about this glacier." },
-        { name: "Demo Glacier E", length: 31, speed: 6.0, height: 91, fact: "Replace this with a verified fact about this glacier." },
-        { name: "Demo Glacier F", length: 47, speed: 3.8, height: 68, fact: "Replace this with a verified fact about this glacier." },
-        { name: "Demo Glacier G", length: 24, speed: 2.9, height: 103, fact: "Replace this with a verified fact about this glacier." },
-        { name: "Demo Glacier H", length: 60, speed: 4.7, height: 79, fact: "Replace this with a verified fact about this glacier." }
-      ];
+      var glacierCards = [];
       var player = [], computer = [], tiePile = [], playerLeads = true, finished = false;
       var status = document.getElementById("game-status");
       var choices = document.getElementById("category-choices");
@@ -37,6 +32,74 @@
         document.getElementById("result-fact-row").hidden = true;
       }
 
+      function parseCSV(text) {
+        var rows = [], row = [], value = "", quoted = false;
+        text = text.replace(/^\uFEFF/, "");
+        for (var i = 0; i < text.length; i++) {
+          var character = text[i];
+          if (quoted) {
+            if (character === '"' && text[i + 1] === '"') {
+              value += '"'; i++;
+            } else if (character === '"') {
+              quoted = false;
+            } else {
+              value += character;
+            }
+          } else if (character === '"' && value === "") {
+            quoted = true;
+          } else if (character === ",") {
+            row.push(value); value = "";
+          } else if (character === "\n") {
+            row.push(value); rows.push(row); row = []; value = "";
+          } else if (character !== "\r") {
+            value += character;
+          }
+        }
+        if (value.length || row.length) {
+          row.push(value); rows.push(row);
+        }
+        return rows;
+      }
+      function numberFromCSV(value) {
+        var normalized = (value || "").trim().replace(/,/g, "");
+        if (!normalized || !/^[+-]?(?:\d+\.?\d*|\.\d+)$/.test(normalized)) return null;
+        var parsed = Number(normalized);
+        return Number.isFinite(parsed) ? parsed : null;
+      }
+      function loadCards() {
+        var game = document.querySelector(".glacier-game");
+        var startButton = document.getElementById("new-game");
+        startButton.disabled = true;
+        fetch(game.dataset.csvUrl)
+          .then(function (response) {
+            if (!response.ok) throw new Error("The CSV could not be loaded.");
+            return response.text();
+          })
+          .then(function (text) {
+            var rows = parseCSV(text);
+            if (rows.length < 2) throw new Error("The CSV does not contain any glacier rows.");
+            var headers = rows[0].map(function (header) { return header.trim(); });
+            glacierCards = rows.slice(1).filter(function (cells) { return cells.some(function (cell) { return cell.trim(); }); }).map(function (cells) {
+              var record = {};
+              headers.forEach(function (header, index) { record[header] = (cells[index] || "").trim(); });
+              var card = {
+                name: record.Glacier || "Unnamed glacier",
+                greenlandicName: record["Greenlandic Name"] === "None" ? "" : (record["Greenlandic Name"] || ""),
+                nameMeaning: record["Greenlandic Name meaning"] === "None" ? "" : (record["Greenlandic Name meaning"] || ""),
+                fact: record["Fun Fact"] === "None" ? "" : (record["Fun Fact"] || "")
+              };
+              categories.forEach(function (category) { card[category.key] = numberFromCSV(record[category.key]); });
+              return card;
+            });
+            if (glacierCards.length < 2) throw new Error("At least two glacier cards are needed to play.");
+            startButton.disabled = false;
+            status.textContent = glacierCards.length + " glacier cards loaded. Press “Start game” to deal.";
+          })
+          .catch(function (error) {
+            status.textContent = "The glacier CSV could not be loaded. Check that files/GreenlandCardData.csv is available on the site, then refresh. " + error.message;
+          });
+      }
+
       function shuffle(cards) {
         for (var i = cards.length - 1; i > 0; i--) {
           var j = Math.floor(Math.random() * (i + 1));
@@ -46,11 +109,19 @@
       }
       function cardMarkup(card, showValues) {
         if (!card) return "<h3>No card</h3><p>This player is out of cards.</p>";
+        function escapeHTML(text) {
+          return String(text).replace(/[&<>"']/g, function (character) {
+            return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[character];
+          });
+        }
         var list = categories.map(function (category) {
-          var value = showValues ? card[category.key] : "?";
-          return "<li>" + category.label + ": <strong>" + value + "</strong></li>";
+          var value = card[category.key];
+          value = showValues ? (value === null ? "Not available" : value.toLocaleString("en-GB", { maximumFractionDigits: 2 })) : "?";
+          return "<li>" + escapeHTML(category.label) + ": <strong>" + value + "</strong></li>";
         }).join("");
-        return "<h3>" + card.name + "</h3><p>Sample glacier card</p><ul>" + list + "</ul>";
+        var localName = card.greenlandicName ? "<p><strong>Greenlandic name:</strong> " + escapeHTML(card.greenlandicName) + "</p>" : "";
+        var meaning = card.nameMeaning ? "<p><strong>Name meaning:</strong> " + escapeHTML(card.nameMeaning) + "</p>" : "";
+        return "<h3>" + escapeHTML(card.name) + "</h3>" + localName + meaning + "<ul>" + list + "</ul>";
       }
       function updateCounts() {
         document.getElementById("player-count").textContent = player.length;
@@ -94,9 +165,17 @@
       }
       function chooseCategory(category) {
         if (finished || !player.length || !computer.length) return;
-        var computerCategory = categories.reduce(function (best, item) {
+        var availableCategories = categories.filter(function (item) {
+          return player[0][item.key] !== null && computer[0][item.key] !== null;
+        });
+        if (!availableCategories.length) {
+          status.textContent = "No shared numeric category is available for these cards. Press “Next turn” to continue.";
+          showResult("No comparable value", "These two glaciers have no numeric values in common.", "");
+          return;
+        }
+        var computerCategory = availableCategories.reduce(function (best, item) {
           return computer[0][item.key] > computer[0][best.key] ? item : best;
-        }, categories[0]);
+        }, availableCategories[0]);
         var selected = playerLeads ? category : computerCategory;
         showCards(true);
         if (!playerLeads) status.textContent = "The computer chose " + selected.label + ".";
@@ -130,6 +209,7 @@
             var button = document.createElement("button");
             button.type = "button";
             button.textContent = category.label;
+            button.disabled = player[0][category.key] === null || computer[0][category.key] === null;
             button.addEventListener("click", function () { chooseCategory(category); });
             choices.appendChild(button);
           });
@@ -153,4 +233,5 @@
       }
       document.getElementById("continue-round").addEventListener("click", nextRound);
       document.getElementById("new-game").addEventListener("click", startGame);
+      loadCards();
     }());
