@@ -4,14 +4,16 @@ title: "Outreach"
 permalink: /outreach/
 author_profile: true
 ---
+# [Greenland Glacier Card Game]({{ '/outreach/game/' | relative_url }})
+
 
 ## About the project
 
-I am developing a simple Top Trumps game to help players discover facts about Greenlandic glaciers. The cards began as a paper version; the browser game is an early digital prototype using the same idea of comparing glacier values.
+I am developing a simple online card game to help players discover facts about glaciers in Greenland. These cards began as a physical paper version developed in a small group during the GRISO 2026 Summer School in Nuuk, Greenland. The browser game is an early digital prototype using the same idea of comparing glacier values.
 
 ## About the cards
 
-Each card represents a Greenlandic glacier and includes its name, Greenlandic name and meaning, a fun fact, and numerical information. The current set of cards uses data from the [Greenland glacier card CSV]({{ '/files/GreenlandCardData.csv' | relative_url }}).
+Each card includes the Greenlandic name and meaning, a fun fact, and various numerical information. The current set of cards uses data from the [Greenland glacier card CSV]({{ '/files/GreenlandCardData.csv' | relative_url }}).
 
 The game includes these comparison categories:
 
@@ -29,11 +31,11 @@ The units and full date ranges are shown on the cards. Some glaciers do not have
 ## How to play
 
 1. Start a game. The cards are shuffled and dealt between you and the computer.
-2. When it is your turn to choose, click a category on your card. The computer's card is revealed and the same category is compared on both cards.
-3. The higher value wins the round. The winning category row is highlighted green, and the losing category row red. The winner takes both cards and chooses the category for the next round. When it is the computer's turn to choose, it selects its highest available value.
+2. When it is your turn to choose, select a category on your card. The computer's card is revealed and the same category is compared on both cards.
+3. The higher value wins the round. The winning category row is highlighted green, and the losing category row red. The winner takes both cards and chooses the category for the next round. When it is the computer's turn to choose, it selects its highest available value (TODO: improved selection criteria).
 4. If the values tie, both cards are held for the next round. You choose the next category, and the next round's winner also collects the tied cards.
 5. The game ends when one player has all the cards. A fun fact about the winning glacier appears with the round's result; press **Next turn** when you are ready to continue.
 
 ## Play the game
 
-[Open Glacier Top Trumps]({{ '/outreach/game/' | relative_url }}) to view the cards and play against the computer.
+[Open Glacier Card Game]({{ '/outreach/game/' | relative_url }}) to view the cards and play against the computer.

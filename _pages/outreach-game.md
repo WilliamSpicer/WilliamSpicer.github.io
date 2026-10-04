@@ -7,8 +7,6 @@ author_profile: true
 
 [Back to Outreach]({{ '/outreach/' | relative_url }})
 
-Click a category on your card when it is your turn. The computer's card is revealed, and the higher value wins the round. The winning category turns green and the losing category turns red. Glacier names, Greenlandic names, facts, categories, and values are loaded from the card data CSV.
-
 <section class="glacier-game" aria-labelledby="glacier-game-title" data-csv-url="{{ '/files/GreenlandCardData.csv' | relative_url }}">
   <style>
     .glacier-game { max-width: 1100px; margin: 2rem auto; color: #17324d; }
