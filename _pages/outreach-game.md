@@ -1,6 +1,6 @@
 ---
 layout: archive
-title: "Play Glacier Top Trumps"
+title: "Play Greenland Glacier Card Game"
 permalink: /outreach/game/
 author_profile: true
 ---
