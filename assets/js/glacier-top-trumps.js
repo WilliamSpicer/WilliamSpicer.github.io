@@ -28,6 +28,13 @@
         choices.innerHTML = "";
       }
 
+      function clearResult() {
+        resultPanel.hidden = true;
+        document.getElementById("result-title").textContent = "";
+        document.getElementById("result-detail").textContent = "";
+        document.getElementById("result-fact").textContent = "";
+      }
+
       function shuffle(cards) {
         for (var i = cards.length - 1; i > 0; i--) {
           var j = Math.floor(Math.random() * (i + 1));
@@ -65,18 +72,18 @@
         if (winner === "player") {
           player.push.apply(player, winnings);
           status.textContent = "You won this round!";
-          showResult("You win this round!", comparison + " You collect the " + winningCard.name + " card.", winningCard.fact);
+          showResult("You win this round!", comparison + " You collect the " + losingCard.name + " card.", winningCard.fact);
           playerLeads = true;
         } else {
           computer.push.apply(computer, winnings);
           status.textContent = "The computer won this round.";
-          showResult("The computer wins this round", comparison + " It collects the " + winningCard.name + " card.", winningCard.fact);
+          showResult("The computer wins this round", comparison + " It collects the " + losingCard.name + " card.", winningCard.fact);
           playerLeads = false;
         }
         updateCounts();
         if (player.length === 0 || computer.length === 0) {
           finished = true;
-          status.textContent += player.length ? " You win the game!" : " The computer wins the game.";
+          status.textContent += player.length ? " You win the game!" : " The computer wins the game";
           document.getElementById("result-title").textContent = player.length ? "You win the game!" : "The computer wins the game!";
           document.getElementById("continue-round").textContent = "Game over";
           document.getElementById("continue-round").disabled = true;
@@ -104,7 +111,7 @@
       }
       function nextRound() {
         if (finished) return;
-        resultPanel.hidden = true;
+        clearResult();
         document.getElementById("continue-round").textContent = "Next turn";
         document.getElementById("continue-round").disabled = false;
         if (!player.length || !computer.length) {
@@ -136,7 +143,7 @@
         tiePile = [];
         playerLeads = true;
         finished = false;
-        resultPanel.hidden = true;
+        clearResult();
         document.getElementById("continue-round").textContent = "Next turn";
         document.getElementById("continue-round").disabled = false;
         updateCounts();

@@ -18,6 +18,7 @@ This is a first, simple test of a Greenlandic glacier Top Trumps game. Choose a 
     .glacier-game__card p { margin-top: 0; color: #496579; }
     .glacier-game__card ul { list-style: none; padding: 0; margin: .75rem 0 0; }
     .glacier-game__card li { padding: .3rem 0; border-top: 1px solid #d8e7ee; }
+    .glacier-game__result[hidden] { display: none !important; }
     .glacier-game__choices { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1rem 0; }
     .glacier-game button { border: 0; border-radius: 6px; padding: .65rem .9rem; background: #176b87; color: white; font: inherit; cursor: pointer; }
     .glacier-game button:hover:not(:disabled) { background: #104d63; }
@@ -47,4 +48,4 @@ This is a first, simple test of a Greenlandic glacier Top Trumps game. Choose a 
 
 </section>
 
-<script src="{{ '/assets/js/glacier-top-trumps.js' | relative_url }}?v=2"></script>
+<script src="{{ '/assets/js/glacier-top-trumps.js' | relative_url }}?v=3"></script>
