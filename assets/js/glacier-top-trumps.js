@@ -10,9 +10,8 @@
         { key: "runoff (RACMO, 2015–2024, Gt)", label: "Runoff (RACMO 2015–2024, Gt)" }
       ];
       var glacierCards = [];
-      var player = [], computer = [], tiePile = [], playerLeads = true, finished = false;
+      var player = [], computer = [], tiePile = [], playerLeads = true, finished = false, gameNumber = 0;
       var status = document.getElementById("game-status");
-      var choices = document.getElementById("category-choices");
       var resultPanel = document.getElementById("round-result");
 
       function showResult(title, detail, fact) {
@@ -21,7 +20,6 @@
         document.getElementById("result-fact").textContent = fact || "";
         document.getElementById("result-fact-row").hidden = !fact;
         resultPanel.hidden = false;
-        choices.innerHTML = "";
       }
 
       function clearResult() {
@@ -93,7 +91,7 @@
             });
             if (glacierCards.length < 2) throw new Error("At least two glacier cards are needed to play.");
             startButton.disabled = false;
-            status.textContent = glacierCards.length + " glacier cards loaded. Press “Start game” to deal.";
+            status.textContent = glacierCards.length + " glacier cards available. Press “Start game” to deal.";
           })
           .catch(function (error) {
             status.textContent = "The glacier CSV could not be loaded. Check that files/GreenlandCardData.csv is available on the site, then refresh. " + error.message;
@@ -107,29 +105,50 @@
         }
         return cards;
       }
-      function cardMarkup(card, showValues) {
+      function cardMarkup(card, showValues, isPlayerCard, selectedCategoryKey, winner) {
         if (!card) return "<h3>No card</h3><p>This player is out of cards.</p>";
+        if (!isPlayerCard && !showValues) return "<h3>Computer's card</h3><div class=\"glacier-game__card-back\">Card face down</div>";
         function escapeHTML(text) {
           return String(text).replace(/[&<>"']/g, function (character) {
             return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[character];
           });
         }
-        var list = categories.map(function (category) {
+        var list = categories.map(function (category, index) {
           var value = card[category.key];
           value = showValues ? (value === null ? "Not available" : value.toLocaleString("en-GB", { maximumFractionDigits: 2 })) : "?";
-          return "<li>" + escapeHTML(category.label) + ": <strong>" + value + "</strong></li>";
+          var rowClass = "glacier-game__stat-row";
+          if (category.key === selectedCategoryKey) {
+            if (winner === "tie") rowClass += " is-tie";
+            else if ((isPlayerCard && winner === "player") || (!isPlayerCard && winner === "computer")) rowClass += " is-winner";
+            else rowClass += " is-loser";
+          }
+          var canChoose = isPlayerCard && playerLeads && !selectedCategoryKey;
+          var valueText = value === "Not available" ? value : "<strong>" + value + "</strong>";
+          var rowContent = "<span>" + escapeHTML(category.label) + "</span>" + valueText;
+          var content = canChoose
+            ? "<button type=\"button\" class=\"glacier-game__stat-button\" data-category-index=\"" + index + "\"" + (player[0][category.key] === null || computer[0][category.key] === null ? " disabled" : "") + ">" + rowContent + "</button>"
+            : "<div class=\"glacier-game__stat-button\">" + rowContent + "</div>";
+          return "<li class=\"" + rowClass + "\">" + content + "</li>";
         }).join("");
         var localName = card.greenlandicName ? "<p><strong>Greenlandic name:</strong> " + escapeHTML(card.greenlandicName) + "</p>" : "";
         var meaning = card.nameMeaning ? "<p><strong>Name meaning:</strong> " + escapeHTML(card.nameMeaning) + "</p>" : "";
-        return "<h3>" + escapeHTML(card.name) + "</h3>" + localName + meaning + "<ul>" + list + "</ul>";
+        var sideTitle = isPlayerCard ? "Your card" : "Computer's card";
+        return "<h3>" + sideTitle + "</h3><h4>" + escapeHTML(card.name) + "</h4>" + localName + meaning + "<ul>" + list + "</ul>";
       }
       function updateCounts() {
         document.getElementById("player-count").textContent = player.length;
         document.getElementById("computer-count").textContent = computer.length;
       }
-      function showCards(revealComputer) {
-        document.getElementById("player-card").innerHTML = cardMarkup(player[0], true);
-        document.getElementById("computer-card").innerHTML = cardMarkup(computer[0], revealComputer);
+      function showCards(revealComputer, selectedCategoryKey, winner) {
+        document.getElementById("player-card").innerHTML = cardMarkup(player[0], true, true, selectedCategoryKey, winner);
+        document.getElementById("computer-card").innerHTML = cardMarkup(computer[0], revealComputer, false, selectedCategoryKey, winner);
+        if (!revealComputer && playerLeads && player.length && computer.length) {
+          document.querySelectorAll("#player-card [data-category-index]").forEach(function (button) {
+            button.addEventListener("click", function () {
+              chooseCategory(categories[Number(button.getAttribute("data-category-index"))]);
+            });
+          });
+        }
       }
       function finishRound(winner, category) {
         var winningCard = winner === "player" ? player[0] : computer[0];
@@ -139,6 +158,7 @@
         var winningValue = winner === "player" ? playerValue : computerValue;
         var losingValue = winner === "player" ? computerValue : playerValue;
         var comparison = winningCard.name + " beats " + losingCard.name + " in " + category.label + ": " + winningValue + " to " + losingValue + ".";
+        showCards(true, category.key, winner);
         var playerCard = player.shift(), computerCard = computer.shift();
         var winnings = tiePile.concat([playerCard, computerCard]);
         tiePile = [];
@@ -150,7 +170,7 @@
         } else {
           computer.push.apply(computer, winnings);
           status.textContent = "The computer won this round.";
-          showResult("The computer wins this round. It chose " + category.label + ". ", comparison + " It collects your " + losingCard.name + " card.", winningCard.fact);
+          showResult("The computer wins this round: " + category.label + ". ", comparison + " The computer wins your " + losingCard.name + " card.", winningCard.fact);
           playerLeads = false;
         }
         updateCounts();
@@ -177,10 +197,10 @@
           return computer[0][item.key] > computer[0][best.key] ? item : best;
         }, availableCategories[0]);
         var selected = playerLeads ? category : computerCategory;
-        showCards(true);
         if (!playerLeads) status.textContent = "The computer chose " + selected.label + ".";
         var playerValue = player[0][selected.key], computerValue = computer[0][selected.key];
         if (playerValue === computerValue) {
+          showCards(true, selected.key, "tie");
           tiePile.push(player.shift(), computer.shift());
           updateCounts();
           status.textContent = "It's a tie!";
@@ -198,27 +218,21 @@
         if (!player.length || !computer.length) {
           finished = true;
           status.textContent = player.length ? "You win the game!" : "The computer wins the game.";
-          choices.innerHTML = "";
           return;
         }
         showCards(false);
-        choices.innerHTML = "";
         if (playerLeads) {
           status.textContent = "Your turn: choose a category.";
-          categories.forEach(function (category) {
-            var button = document.createElement("button");
-            button.type = "button";
-            button.textContent = category.label;
-            button.disabled = player[0][category.key] === null || computer[0][category.key] === null;
-            button.addEventListener("click", function () { chooseCategory(category); });
-            choices.appendChild(button);
-          });
         } else {
           status.textContent = "Computer's turn to choose a category…";
-          window.setTimeout(function () { chooseCategory(categories[0]); }, 900);
+          var currentGame = gameNumber;
+          window.setTimeout(function () {
+            if (currentGame === gameNumber && !finished && !playerLeads) chooseCategory(categories[0]);
+          }, 900);
         }
       }
       function startGame() {
+        gameNumber++;
         var deck = shuffle(glacierCards.map(function (card) { return Object.assign({}, card); }));
         player = deck.slice(0, deck.length / 2);
         computer = deck.slice(deck.length / 2);
