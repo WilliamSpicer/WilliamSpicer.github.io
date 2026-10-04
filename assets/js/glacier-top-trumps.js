@@ -61,12 +61,12 @@
         if (winner === "player") {
           player.push.apply(player, winnings);
           status.textContent = "You won this round!";
-          showResult("You win this round!", "You chose " + category.label + ": " + playerValue + " to " + computerValue + ". You collect " + winnings.length + " card(s).", winningCard.fact);
+          showResult("You win this round!", "You chose " + category.label + ": " + playerValue + " to " + computerValue + ". You collect the " + winningCard.name + " card.", winningCard.fact);
           playerLeads = true;
         } else {
           computer.push.apply(computer, winnings);
           status.textContent = "The computer won this round.";
-          showResult("The computer wins this round", "The computer chose " + category.label + ": " + computerValue + " to " + playerValue + ". It collects " + winnings.length + " card(s).", winningCard.fact);
+          showResult("The computer wins this round", "The computer chose " + category.label + ": " + computerValue + " to " + playerValue + ". It collects the " + winningCard.name + " card.", winningCard.fact);
           playerLeads = false;
         }
         updateCounts();
