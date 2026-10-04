@@ -24,6 +24,7 @@
         document.getElementById("result-title").textContent = title;
         document.getElementById("result-detail").textContent = detail;
         document.getElementById("result-fact").textContent = fact || "";
+        document.getElementById("result-fact-row").hidden = !fact;
         resultPanel.hidden = false;
         choices.innerHTML = "";
       }
@@ -33,6 +34,7 @@
         document.getElementById("result-title").textContent = "";
         document.getElementById("result-detail").textContent = "";
         document.getElementById("result-fact").textContent = "";
+        document.getElementById("result-fact-row").hidden = true;
       }
 
       function shuffle(cards) {
@@ -72,12 +74,12 @@
         if (winner === "player") {
           player.push.apply(player, winnings);
           status.textContent = "You won this round!";
-          showResult("You win this round!", comparison + " You collect the " + losingCard.name + " card.", winningCard.fact);
+          showResult("You win this round!", comparison + " You win the " + losingCard.name + " card.", winningCard.fact);
           playerLeads = true;
         } else {
           computer.push.apply(computer, winnings);
           status.textContent = "The computer won this round.";
-          showResult("The computer wins this round", comparison + " It collects the " + losingCard.name + " card.", winningCard.fact);
+          showResult("The computer wins this round", comparison + " It collects your " + losingCard.name + " card.", winningCard.fact);
           playerLeads = false;
         }
         updateCounts();
