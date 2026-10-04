@@ -34,10 +34,16 @@ This is a first, simple test of a Greenlandic glacier Top Trumps game. Choose a 
     <article class="glacier-game__card" id="player-card"><h3>Your card</h3><p>Waiting to deal…</p></article>
     <article class="glacier-game__card" id="computer-card"><h3>Computer's card</h3><p>Waiting to deal…</p></article>
   </div>
+  <section class="glacier-game__result" id="round-result" aria-live="polite" hidden>
+    <h3 id="result-title"></h3>
+    <p id="result-detail"></p>
+    <p><strong>Glacier fact:</strong> <span id="result-fact"></span></p>
+    <button type="button" id="continue-round">Next turn</button>
+  </section>
   <h3 id="choice-heading">Choose a category</h3>
   <div class="glacier-game__choices" id="category-choices" aria-labelledby="choice-heading"></div>
   <button type="button" class="glacier-game__new" id="new-game">Start game / deal again</button>
-  <p class="glacier-game__note">Demo stats are invented for this prototype and are not real glacier measurements. The highest number wins. If there is a tie, the cards go into a shared pile and the next round's winner takes them.</p>
+  <p class="glacier-game__note">Demo stats and facts are placeholders, not real glacier measurements or facts. The highest number wins. If there is a tie, the cards go into a shared pile and the next round's winner takes them.</p>
 
   <script src="{{ '/assets/js/glacier-top-trumps.js' | relative_url }}" defer></script>
 </section>

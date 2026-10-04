@@ -6,18 +6,27 @@
       ];
       // Replace these illustrative values with the facts from your cards.
       var glacierCards = [
-        { name: "Demo Glacier A", length: 42, speed: 3.2, height: 85 },
-        { name: "Demo Glacier B", length: 28, speed: 5.1, height: 62 },
-        { name: "Demo Glacier C", length: 55, speed: 2.4, height: 110 },
-        { name: "Demo Glacier D", length: 36, speed: 4.3, height: 74 },
-        { name: "Demo Glacier E", length: 31, speed: 6.0, height: 91 },
-        { name: "Demo Glacier F", length: 47, speed: 3.8, height: 68 },
-        { name: "Demo Glacier G", length: 24, speed: 2.9, height: 103 },
-        { name: "Demo Glacier H", length: 60, speed: 4.7, height: 79 }
+        { name: "Demo Glacier A", length: 42, speed: 3.2, height: 85, fact: "Replace this with a verified fact about this glacier." },
+        { name: "Demo Glacier B", length: 28, speed: 5.1, height: 62, fact: "Replace this with a verified fact about this glacier." },
+        { name: "Demo Glacier C", length: 55, speed: 2.4, height: 110, fact: "Replace this with a verified fact about this glacier." },
+        { name: "Demo Glacier D", length: 36, speed: 4.3, height: 74, fact: "Replace this with a verified fact about this glacier." },
+        { name: "Demo Glacier E", length: 31, speed: 6.0, height: 91, fact: "Replace this with a verified fact about this glacier." },
+        { name: "Demo Glacier F", length: 47, speed: 3.8, height: 68, fact: "Replace this with a verified fact about this glacier." },
+        { name: "Demo Glacier G", length: 24, speed: 2.9, height: 103, fact: "Replace this with a verified fact about this glacier." },
+        { name: "Demo Glacier H", length: 60, speed: 4.7, height: 79, fact: "Replace this with a verified fact about this glacier." }
       ];
       var player = [], computer = [], tiePile = [], playerLeads = true, finished = false;
       var status = document.getElementById("game-status");
       var choices = document.getElementById("category-choices");
+      var resultPanel = document.getElementById("round-result");
+
+      function showResult(title, detail, fact) {
+        document.getElementById("result-title").textContent = title;
+        document.getElementById("result-detail").textContent = detail;
+        document.getElementById("result-fact").textContent = fact || "";
+        resultPanel.hidden = false;
+        choices.innerHTML = "";
+      }
 
       function shuffle(cards) {
         for (var i = cards.length - 1; i > 0; i--) {
@@ -43,27 +52,32 @@
         document.getElementById("computer-card").innerHTML = cardMarkup(computer[0], revealComputer);
       }
       function finishRound(winner, category) {
+        var winningCard = winner === "player" ? player[0] : computer[0];
+        var playerValue = player[0][category.key];
+        var computerValue = computer[0][category.key];
         var playerCard = player.shift(), computerCard = computer.shift();
         var winnings = tiePile.concat([playerCard, computerCard]);
         tiePile = [];
         if (winner === "player") {
           player.push.apply(player, winnings);
-          status.textContent = "You win this round on " + category.label + "! You collect " + winnings.length + " card(s).";
+          status.textContent = "You won this round!";
+          showResult("You win this round!", "You chose " + category.label + ": " + playerValue + " to " + computerValue + ". You collect " + winnings.length + " card(s).", winningCard.fact);
           playerLeads = true;
         } else {
           computer.push.apply(computer, winnings);
-          status.textContent = "The computer wins this round on " + category.label + ". It collects " + winnings.length + " card(s).";
+          status.textContent = "The computer won this round.";
+          showResult("The computer wins this round", "The computer chose " + category.label + ": " + computerValue + " to " + playerValue + ". It collects " + winnings.length + " card(s).", winningCard.fact);
           playerLeads = false;
         }
         updateCounts();
         if (player.length === 0 || computer.length === 0) {
           finished = true;
           status.textContent += player.length ? " You win the game!" : " The computer wins the game.";
-          choices.innerHTML = "";
-          showCards(false);
+          document.getElementById("result-title").textContent = player.length ? "You win the game!" : "The computer wins the game!";
+          document.getElementById("continue-round").textContent = "Game over";
+          document.getElementById("continue-round").disabled = true;
           return;
         }
-        window.setTimeout(nextRound, 1100);
       }
       function chooseCategory(category) {
         if (finished || !player.length || !computer.length) return;
@@ -72,20 +86,23 @@
         }, categories[0]);
         var selected = playerLeads ? category : computerCategory;
         showCards(true);
-        if (!playerLeads) status.textContent = "The computer chooses " + selected.label + ".";
+        if (!playerLeads) status.textContent = "The computer chose " + selected.label + ".";
         var playerValue = player[0][selected.key], computerValue = computer[0][selected.key];
         if (playerValue === computerValue) {
           tiePile.push(player.shift(), computer.shift());
           updateCounts();
-          status.textContent += " It's a tie (" + playerValue + ")! Cards go into the shared pile; you choose next round.";
+          status.textContent = "It's a tie!";
+          showResult("It's a tie!", "Both cards have " + playerValue + " for " + selected.label + ". The cards go into the shared pile; you choose next round.", "No card won this round, so there is no winning-card fact.");
           playerLeads = true;
-          window.setTimeout(nextRound, 1100);
         } else {
           finishRound(playerValue > computerValue ? "player" : "computer", selected);
         }
       }
       function nextRound() {
         if (finished) return;
+        resultPanel.hidden = true;
+        document.getElementById("continue-round").textContent = "Next turn";
+        document.getElementById("continue-round").disabled = false;
         if (!player.length || !computer.length) {
           finished = true;
           status.textContent = player.length ? "You win the game!" : "The computer wins the game.";
@@ -115,8 +132,12 @@
         tiePile = [];
         playerLeads = true;
         finished = false;
+        resultPanel.hidden = true;
+        document.getElementById("continue-round").textContent = "Next turn";
+        document.getElementById("continue-round").disabled = false;
         updateCounts();
         nextRound();
       }
+      document.getElementById("continue-round").addEventListener("click", nextRound);
       document.getElementById("new-game").addEventListener("click", startGame);
     }());
