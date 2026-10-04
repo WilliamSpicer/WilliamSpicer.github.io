@@ -53,20 +53,24 @@
       }
       function finishRound(winner, category) {
         var winningCard = winner === "player" ? player[0] : computer[0];
+        var losingCard = winner === "player" ? computer[0] : player[0];
         var playerValue = player[0][category.key];
         var computerValue = computer[0][category.key];
+        var winningValue = winner === "player" ? playerValue : computerValue;
+        var losingValue = winner === "player" ? computerValue : playerValue;
+        var comparison = winningCard.name + " beats " + losingCard.name + " in " + category.label + ": " + winningValue + " to " + losingValue + ".";
         var playerCard = player.shift(), computerCard = computer.shift();
         var winnings = tiePile.concat([playerCard, computerCard]);
         tiePile = [];
         if (winner === "player") {
           player.push.apply(player, winnings);
           status.textContent = "You won this round!";
-          showResult("You win this round!", "You chose " + category.label + ": " + playerValue + " to " + computerValue + ". You collect the " + winningCard.name + " card.", winningCard.fact);
+          showResult("You win this round!", comparison + " You collect the " + winningCard.name + " card.", winningCard.fact);
           playerLeads = true;
         } else {
           computer.push.apply(computer, winnings);
           status.textContent = "The computer won this round.";
-          showResult("The computer wins this round", "The computer chose " + category.label + ": " + computerValue + " to " + playerValue + ". It collects the " + winningCard.name + " card.", winningCard.fact);
+          showResult("The computer wins this round", comparison + " It collects the " + winningCard.name + " card.", winningCard.fact);
           playerLeads = false;
         }
         updateCounts();
