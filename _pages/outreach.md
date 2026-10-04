@@ -45,5 +45,6 @@ This is a first, simple test of a Greenlandic glacier Top Trumps game. Choose a 
   <button type="button" class="glacier-game__new" id="new-game">Start game / deal again</button>
   <p class="glacier-game__note">Demo stats and facts are placeholders, not real glacier measurements or facts. The highest number wins. If there is a tie, the cards go into a shared pile and the next round's winner takes them.</p>
 
-  <script src="{{ '/assets/js/glacier-top-trumps.js' | relative_url }}" defer></script>
 </section>
+
+<script src="{{ '/assets/js/glacier-top-trumps.js' | relative_url }}?v=2"></script>
