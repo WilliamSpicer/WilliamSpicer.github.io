@@ -72,4 +72,4 @@ permalink: /outreach/game/
   </dialog>
 </main>
 
-<script src="{{ '/assets/js/glacier-top-trumps.js' | relative_url }}?v=8"></script>
+<script src="{{ '/assets/js/glacier-top-trumps.js' | relative_url }}?v=9"></script>

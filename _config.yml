@@ -12,7 +12,7 @@ site_theme               : "default" # The available themes options are "default
 title                    : "William Spicer" #"Your Name / Site Title"
 title_separator          : "-"
 name                     : &name "William Spicer"
-description              : &description "Your Name's academic portfolio"   # Update this with a general description of your site, this is the default if not overridden by a page
+description              : &description "William Spicer, PhD student in glaciology at the University of St Andrews, researching iceberg calving"   # Update this with a general description of your site, this is the default if not overridden by a page
 url                      : https://WilliamSpicer.github.io # The base hostname & protocol for your site e.g. "https://[your GitHub username].github.io",
                                                            # or if you already have some other page hosted on Github then use "https://[your GitHub username].github.io/[Your Repo Name]"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
@@ -130,7 +130,7 @@ atom_feed:
 
 
 # SEO Related
-google_site_verification :
+google_site_verification : "5dgtlkjiEQVrH6EIze7tle8wyZj0DbX4cA1qn1wxs2E"
 bing_site_verification   :
 alexa_site_verification  :
 yandex_site_verification :

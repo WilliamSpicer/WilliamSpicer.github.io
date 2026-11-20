@@ -359,6 +359,32 @@
     }
   }
 
+  // How strong is this card's value compared with the whole deck? Returns 0 (weakest) to 1 (strongest).
+  // Comparing ranks, not raw numbers, stops big-number stats like area always looking "best".
+  function deckStrength(card, category) {
+    var value = card[category.key], beaten = 0, others = 0;
+    glacierCards.forEach(function (other) {
+      var otherValue = other[category.key];
+      if (other.name === card.name || otherValue === null) return;
+      others++;
+      if (value > otherValue) beaten++;
+      else if (value === otherValue) beaten += 0.5;
+    });
+    return others ? beaten / others : 0.5;
+  }
+
+  // The computer picks the stat where its card is strongest relative to the deck
+  // (like a person who knows roughly what's high or low for each stat). Ties are broken at random.
+  function pickComputerCategory(card, availableCategories) {
+    var best = [], bestScore = -1;
+    availableCategories.forEach(function (category) {
+      var score = deckStrength(card, category);
+      if (score > bestScore + 1e-9) { best = [category]; bestScore = score; }
+      else if (Math.abs(score - bestScore) <= 1e-9) best.push(category);
+    });
+    return best[Math.floor(Math.random() * best.length)];
+  }
+
   function chooseCategory(category) {
     if (finished || roundLocked || !player.length || !computer.length) return;
     roundLocked = true;
@@ -378,9 +404,7 @@
       return;
     }
 
-    var computerCategory = availableCategories.reduce(function (best, item) {
-      return computer[0][item.key] > computer[0][best.key] ? item : best;
-    }, availableCategories[0]);
+    var computerCategory = pickComputerCategory(computer[0], availableCategories);
     var selected = playerLeads ? category : computerCategory;
     var playerValue = player[0][selected.key], computerValue = computer[0][selected.key];
 
