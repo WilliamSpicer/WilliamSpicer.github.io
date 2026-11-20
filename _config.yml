@@ -191,6 +191,15 @@ exclude:
   - Rakefile
   - README
   - tmp
+  # template tooling, not pages for visitors or search engines
+  - AGENTS.md
+  - markdown_generator
+  - talkmap
+  - talkmap.py
+  - "*.ipynb"
+  - scripts
+  - docker-compose.yaml
+  - _config_docker.yml
   - vendor
 keep_files:
   - .git

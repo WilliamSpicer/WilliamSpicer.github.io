@@ -4,33 +4,28 @@
 # links. Removing a link prevents it from showing in the header, but does not
 # prevent it from being included in the site.
 #
-# NOTE that only one of the CV options should be selected, the first is for the
-#      Markdown formatted page while the second is generated using JSON.
+# Sections without real content yet are commented out. To bring one back,
+# uncomment it here AND delete the "sitemap: false" line at the top of its
+# page in _pages/ so search engines can find it.
 
 main:
   - title: "Publications"
     url: /publications/
 
-  - title: "Talks"
-    url: /talks/    
-
-  - title: "Teaching"
-    url: /teaching/    
-
   - title: "Outreach"
     url: /outreach/
-    
-  - title: "Portfolio"
-    url: /portfolio/
-        
-  - title: "Blog Posts"
-    url: /year-archive/
-    
-  - title: "CV"
-    url: /cv/
-    
-  # - title: "CV"
-  #   url: /cv-json/
-    
-  - title: "Guide"
-    url: /markdown/
+
+  # - title: "Talks"
+  #   url: /talks/
+
+  # - title: "Teaching"
+  #   url: /teaching/
+
+  # - title: "Portfolio"
+  #   url: /portfolio/
+
+  # - title: "Blog Posts"
+  #   url: /year-archive/
+
+  # - title: "CV"          # _pages/cv.md still has the template's example text
+  #   url: /cv/
