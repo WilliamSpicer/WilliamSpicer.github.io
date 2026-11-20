@@ -715,6 +715,67 @@ button.gg-stat__btn:disabled { cursor: not-allowed; opacity: .45; }
   .gg-seat__label { font-size: .9rem; gap: .35rem; }
 }
 
+/* ---------- difficulty picker (shown before a game and after it ends) ---------- */
+
+.gg-difficulty {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.gg[data-state="player-turn"] .gg-difficulty,
+.gg[data-state="computer-turn"] .gg-difficulty,
+.gg[data-state="round-over"] .gg-difficulty { display: none; }
+
+.gg-difficulty legend {
+  padding: 0;
+  margin: 0 auto .35rem;
+  font-family: var(--gg-display);
+  font-weight: 600;
+  font-size: .8rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--gg-ice);
+}
+.gg-difficulty__options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .08);
+  border: 1px solid rgba(159, 216, 232, .25);
+}
+.gg-difficulty label { margin: 0; cursor: pointer; }
+.gg-difficulty input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+.gg-difficulty label span {
+  display: block;
+  text-align: center;
+  padding: .35rem .5rem;
+  border-radius: 999px;
+  font-family: var(--gg-display);
+  font-weight: 700;
+  font-size: .95rem;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: #cfe6ee;
+  transition: background-color .15s ease, color .15s ease;
+}
+.gg-difficulty label:hover span { background: rgba(255, 255, 255, .1); color: #fff; }
+.gg-difficulty input:checked + span { background: var(--gg-ice); color: var(--gg-ink); }
+.gg-difficulty input:focus-visible + span { outline: 3px solid #fff; outline-offset: 2px; }
+
+@media (max-width: 900px), (max-aspect-ratio: 5/4) {
+  .gg-difficulty { grid-column: 1 / -1; grid-row: 3; }
+  .gg-difficulty legend { margin: 0 0 .25rem; }
+  .gg-difficulty label span { font-size: .85rem; padding: .3rem .4rem; }
+}
+
 /* very short screens (landscape phones): hide the art window */
 @container card (max-height: 420px) {
   .gg-card__art, .gg-card__meaning { display: none; }

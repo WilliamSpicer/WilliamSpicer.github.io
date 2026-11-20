@@ -39,6 +39,14 @@ permalink: /outreach/game/
           <p class="gg-result__fact" id="result-fact-row" hidden><span class="gg-result__fact-label">Glacier fact</span> <span id="result-fact"></span></p>
         </div>
       </div>
+      <fieldset class="gg-difficulty" id="gg-difficulty">
+        <legend>Computer difficulty</legend>
+        <div class="gg-difficulty__options">
+          <label><input type="radio" name="gg-difficulty" value="easy"><span>Easy</span></label>
+          <label><input type="radio" name="gg-difficulty" value="normal" checked><span>Normal</span></label>
+          <label><input type="radio" name="gg-difficulty" value="hard"><span>Hard</span></label>
+        </div>
+      </fieldset>
       <div class="gg-centre__actions">
         <button type="button" class="gg-btn gg-btn--primary" id="continue-round" hidden>Next turn &#8594;</button>
         <button type="button" class="gg-btn gg-btn--primary" id="new-game" disabled>Deal cards</button>
@@ -62,6 +70,7 @@ permalink: /outreach/game/
     <h2 id="gg-help-title">How to play</h2>
     <ol>
       <li>Press <strong>Deal cards</strong>. The glacier cards are shuffled and split between you and the computer.</li>
+      <li>Choose how tough the computer is: on <strong>Easy</strong> it often picks at random, on <strong>Hard</strong> it nearly always picks its strongest stat.</li>
       <li>On your turn, pick a stat on your card that you think will beat the computer's card.</li>
       <li>The higher number wins. The winner takes both cards and picks the next stat.</li>
       <li>If it's a tie, both cards go into a tie pile, and whoever wins the next round takes them too.</li>
@@ -72,4 +81,4 @@ permalink: /outreach/game/
   </dialog>
 </main>
 
-<script src="{{ '/assets/js/glacier-top-trumps.js' | relative_url }}?v=9"></script>
+<script src="{{ '/assets/js/glacier-top-trumps.js' | relative_url }}?v=11"></script>

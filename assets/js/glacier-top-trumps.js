@@ -373,9 +373,31 @@
     return others ? beaten / others : 0.5;
   }
 
+  // How often (0 to 1) the computer plays its strongest stat; otherwise it picks a random one.
+  // Win rate when the computer chooses, from simulating every card against every other card:
+  // 1 = ~91%, 0.7 = ~78%, 0.5 = ~70%, 0.3 = ~62%, 0.2 = ~58%, 0 = ~50% (purely random).
+  var DIFFICULTY_SKILL = { easy: 0.2, normal: 0.5, hard: 1 };
+  var COMPUTER_SKILL = DIFFICULTY_SKILL.normal;
+
+  // Difficulty picker: remembered in this browser, and can be changed between games.
+  var difficultyInputs = document.querySelectorAll("input[name='gg-difficulty']");
+  function setDifficulty(level) {
+    if (!DIFFICULTY_SKILL.hasOwnProperty(level)) level = "normal";
+    COMPUTER_SKILL = DIFFICULTY_SKILL[level];
+    difficultyInputs.forEach(function (input) { input.checked = input.value === level; });
+    try { localStorage.setItem("gg-difficulty", level); } catch (error) { /* storage unavailable: just don't remember */ }
+  }
+  difficultyInputs.forEach(function (input) {
+    input.addEventListener("change", function () { if (input.checked) setDifficulty(input.value); });
+  });
+  try { setDifficulty(localStorage.getItem("gg-difficulty") || "normal"); } catch (error) { setDifficulty("normal"); }
+
   // The computer picks the stat where its card is strongest relative to the deck
   // (like a person who knows roughly what's high or low for each stat). Ties are broken at random.
   function pickComputerCategory(card, availableCategories) {
+    if (Math.random() >= COMPUTER_SKILL) {
+      return availableCategories[Math.floor(Math.random() * availableCategories.length)];
+    }
     var best = [], bestScore = -1;
     availableCategories.forEach(function (category) {
       var score = deckStrength(card, category);
