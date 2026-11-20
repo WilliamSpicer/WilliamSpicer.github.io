@@ -1,0 +1,24 @@
+---
+layout: compress
+---
+{% comment %}
+  Full-screen layout for the outreach card game.
+  No masthead, sidebar or footer, so the game can fill the viewport without scrolling.
+{% endcomment %}
+{% include base_path %}
+
+<!doctype html>
+<html lang="{{ site.locale | slice: 0,2 }}" class="no-js">
+  <head>
+    {% include head.html %}
+    <link rel="icon" type="image/svg+xml" href="{{ base_path }}/images/favicon.svg"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600&display=swap">
+    <link rel="stylesheet" href="{{ base_path }}/assets/css/glacier-game.css?v=1">
+    {% include analytics.html %}
+  </head>
+  <body class="gg-body">
+    {{ content }}
+  </body>
+</html>

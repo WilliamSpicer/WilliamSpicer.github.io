@@ -1,57 +1,75 @@
 ---
-layout: archive
+layout: game
 title: "Play Greenland Glacier Card Game"
 permalink: /outreach/game/
-author_profile: true
 ---
 
-[Back to Outreach]({{ '/outreach/' | relative_url }})
+<main class="gg" data-csv-url="{{ '/files/GreenlandCardData.csv' | relative_url }}" data-state="loading">
+  <header class="gg-hud">
+    <a class="gg-hud__back" href="{{ '/outreach/' | relative_url }}" aria-label="Back to Outreach">&#8592;<span> Outreach</span></a>
+    <h1 class="gg-hud__title">Greenland Glacier <span>Card Game</span></h1>
+    <button type="button" class="gg-hud__help" id="gg-help-open" aria-haspopup="dialog">? <span>How to play</span></button>
+  </header>
 
-<section class="glacier-game" aria-labelledby="glacier-game-title" data-csv-url="{{ '/files/GreenlandCardData.csv' | relative_url }}">
-  <style>
-    .glacier-game { max-width: 1100px; margin: 2rem auto; color: #17324d; }
-    .glacier-game h2, .glacier-game h3 { margin-top: 0; }
-    .glacier-game__status { min-height: 1.5em; font-weight: 700; }
-    .glacier-game__board { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; margin: 1.5rem 0; align-items: stretch; }
-    .glacier-game__card { min-width: 0; border: 2px solid #d4e1e7; border-radius: 18px; padding: 1.25rem; background: #fff; box-shadow: 0 5px 16px rgba(20, 47, 62, .12); }
-    .glacier-game__card h3 { margin: 0 0 .5rem; color: #17324d; }
-    .glacier-game__card p { margin: .35rem 0; color: #496579; }
-    .glacier-game__card ul { list-style: none; padding: 0; margin: 1rem 0 0; }
-    .glacier-game__card li { margin: 0; padding: 0; border-top: 1px solid #d8e7ee; }
-    .glacier-game__stat-button { box-sizing: border-box; width: 100%; display: flex; justify-content: space-between; gap: 1rem; padding: .65rem .9rem !important; border: 0; text-align: left; font: inherit; text-transform: none !important; border-radius: 0 !important; background: #f0f3f8 !important; color: #17324d !important; }
-    .glacier-game__stat-button:hover:not(:disabled) { background: #e3ebf2 !important; }
-    .glacier-game__stat-button:disabled { opacity: 1; background: #f0f3f8 !important; color: #17324d !important; }
-    .glacier-game__stat-row.is-winner .glacier-game__stat-button { background: #d8f1df !important; color: #14532d !important; font-weight: 700; }
-    .glacier-game__stat-row.is-loser .glacier-game__stat-button { background: #f8dddd !important; color: #7f1d1d !important; }
-    .glacier-game__stat-row.is-tie .glacier-game__stat-button { background: #fff1c9 !important; color: #684c00 !important; }
-    .glacier-game__card-back { min-height: 430px; display: grid; place-items: center; border-radius: 12px; background: repeating-linear-gradient(45deg, #eaf1f5 0 12px, #f8fbfc 12px 24px); color: #496579; font-size: 1.25rem; font-weight: 700; }
-    .glacier-game [hidden] { display: none !important; }
-    .glacier-game__choices { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1rem 0; }
-    .glacier-game button { border: 0; border-radius: 6px; padding: .65rem .9rem; background: #176b87; color: white; font: inherit; cursor: pointer; }
-    .glacier-game button:hover:not(:disabled) { background: #104d63; }
-    .glacier-game button:disabled { background: #9aaeb8; cursor: not-allowed; }
-    .glacier-game__new { background: #40566b !important; }
-    .glacier-game__note { font-size: .9em; color: #496579; }
-    @media (max-width: 650px) { .glacier-game__board { grid-template-columns: 1fr; gap: 1rem; } .glacier-game__card-back { min-height: 220px; } }
-    @media (prefers-reduced-motion: no-preference) { .glacier-game__card { transition: border-color .2s ease; } }
-  </style>
+  <div class="gg-table">
+    <section class="gg-seat gg-seat--player" aria-label="Your card">
+      <div class="gg-seat__label"><span>You</span><span class="gg-pill"><strong id="player-count">0</strong> cards</span></div>
+      <div class="gg-card-slot">
+        <article class="gg-card" id="player-card">
+          <div class="gg-card__inner">
+            <div class="gg-card__face gg-card__front" id="player-front"></div>
+            <div class="gg-card__face gg-card__back" aria-hidden="true"></div>
+          </div>
+        </article>
+      </div>
+    </section>
 
-  <h2 id="glacier-game-title">Your cards</h2>
-  <p>Cards in your hand: <strong id="player-count">0</strong> &nbsp;|&nbsp; Computer: <strong id="computer-count">0</strong></p>
-  <p id="game-status" class="glacier-game__status" role="status" aria-live="polite">Loading glacier cards from the CSV…</p>
-  <div class="glacier-game__board" aria-live="polite">
-    <article class="glacier-game__card" id="player-card"><h3>Your card</h3><p>Waiting to deal…</p></article>
-    <article class="glacier-game__card" id="computer-card"><h3>Computer's card</h3><div class="glacier-game__card-back">Card face down</div></article>
+    <section class="gg-centre" aria-label="Game status">
+      <div class="gg-centre__score" aria-hidden="true">
+        <span class="gg-stack gg-stack--player"><b id="player-count-big">0</b><small>You</small></span>
+        <span class="gg-centre__vs">VS</span>
+        <span class="gg-stack gg-stack--computer"><b id="computer-count-big">0</b><small>Computer</small></span>
+      </div>
+      <p class="gg-centre__pot" id="tie-pot" hidden>Tie pile: <strong id="tie-count">0</strong> cards</p>
+      <div class="gg-centre__message" aria-live="polite">
+        <p class="gg-centre__status" id="game-status" role="status">Shuffling the glacier cards…</p>
+        <div class="gg-result" id="round-result" hidden>
+          <h2 class="gg-result__title" id="result-title"></h2>
+          <p class="gg-result__detail" id="result-detail"></p>
+          <p class="gg-result__fact" id="result-fact-row" hidden><span class="gg-result__fact-label">Glacier fact</span> <span id="result-fact"></span></p>
+        </div>
+      </div>
+      <div class="gg-centre__actions">
+        <button type="button" class="gg-btn gg-btn--primary" id="continue-round" hidden>Next turn &#8594;</button>
+        <button type="button" class="gg-btn gg-btn--primary" id="new-game" disabled>Deal cards</button>
+      </div>
+    </section>
+
+    <section class="gg-seat gg-seat--computer" aria-label="Computer's card">
+      <div class="gg-seat__label"><span>Computer</span><span class="gg-pill"><strong id="computer-count">0</strong> cards</span></div>
+      <div class="gg-card-slot">
+        <article class="gg-card" id="computer-card">
+          <div class="gg-card__inner">
+            <div class="gg-card__face gg-card__front" id="computer-front"></div>
+            <div class="gg-card__face gg-card__back" aria-hidden="true"></div>
+          </div>
+        </article>
+      </div>
+    </section>
   </div>
-  <section class="glacier-game__result" id="round-result" aria-live="polite" hidden>
-    <h3 id="result-title"></h3>
-    <p id="result-detail"></p>
-    <p id="result-fact-row" hidden><strong>Glacier fact:</strong> <span id="result-fact"></span></p>
-    <button type="button" id="continue-round">Next turn</button>
-  </section>
-  <button type="button" class="glacier-game__new" id="new-game">Start game / deal again</button>
-  <p class="glacier-game__note">Values and facts come from the CSV. A higher numeric value wins each category. Blank or non-numeric values are skipped for that round. If there is a tie, those cards go into a shared pile and the next round's winner takes them.</p>
 
-</section>
+  <dialog class="gg-dialog" id="gg-help" aria-labelledby="gg-help-title">
+    <h2 id="gg-help-title">How to play</h2>
+    <ol>
+      <li>Press <strong>Deal cards</strong>. The glacier cards are shuffled and split between you and the computer.</li>
+      <li>On your turn, pick a stat on your card that you think will beat the computer's card.</li>
+      <li>The higher number wins. The winner takes both cards and picks the next stat.</li>
+      <li>If it's a tie, both cards go into a tie pile, and whoever wins the next round takes them too.</li>
+      <li>The game ends when one player holds every card.</li>
+    </ol>
+    <p class="gg-dialog__note">All values and facts come from the glacier data sheet. A stat with no data is greyed out and can't be picked for that round.</p>
+    <form method="dialog"><button class="gg-btn gg-btn--primary" type="submit">Got it</button></form>
+  </dialog>
+</main>
 
-<script src="{{ '/assets/js/glacier-top-trumps.js' | relative_url }}?v=7"></script>
+<script src="{{ '/assets/js/glacier-top-trumps.js' | relative_url }}?v=8"></script>
