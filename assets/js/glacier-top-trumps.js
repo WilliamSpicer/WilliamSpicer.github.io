@@ -13,6 +13,30 @@
     { key: "runoff (RACMO, 2015–2024, Gt)", label: "Runoff (RACMO 2015–2024, Gt)", short: "Runoff", unit: "Gt" }
   ];
 
+  // satellite picture for each card: Glacier name in the CSV -> file in images/glaciers/
+  // a glacier missing from this list gets the drawn glacier scene instead
+  var glacierImages = {
+    "Jakobshavn Isbræ": "jakobshavn-isbrae.jpg",
+    "Kangiata Nunaata Sermia": "kangiata-nunaata-sermia.jpg",
+    "Helheim Glacier": "helheim-glacier.jpg",
+    "K.I.V Steenstrup Nørdre Bræ": "kiv-steenstrup-nordre-brae.jpg",
+    "Store Glacier": "store-glacier.jpg",
+    "Petermann Glacier": "petermann-glacier.jpg",
+    "Nioghalvfjerdsbræ": "nioghalvfjerdsbrae.jpg",
+    "Køge Bugt": "koge-bugt.jpg",
+    "Harald Moltke Bræ": "harald-moltke-brae.jpg",
+    "Polonia Glacier": "polonia-glacier.jpg",
+    "Kangerlussuaq Glacier": "kangerlussuaq-glacier.jpg",
+    "Daugaard-Jensen Glacier": "daugaard-jensen-glacier.jpg",
+    "Qooqqup Sermia": "qooqqup-sermia.jpg",
+    "Tracy Glacier": "tracy-glacier.jpg",
+    "Hayes Glacier": "hayes-glacier.jpg",
+    "Saqqarliup Sermia": "saqqarliup-sermia.jpg",
+    "Isunnguata Sermia": "isunnguata-sermia.jpg",
+    "Frederikshåb Isblink": "frederikshab-isblink.jpg",
+    "Nordenskiöld Glacier": "nordenskiold-glacier.jpg"
+  };
+
   // colour of each card's frame, picked from the glacier name so it stays the same every game
   var frameColours = ["#3fb6d3", "#2d8fbf", "#4a7fd6", "#2fa39a", "#6c8fb3", "#3a9fc0", "#5a78c8", "#2a9a86"];
 
@@ -172,6 +196,11 @@
   ];
 
   function artMarkup(card) {
+    var image = glacierImages[card.name.normalize("NFC")];
+    if (image) {
+      return "<img src='" + escapeHTML(root.dataset.imagesUrl + image) + "' alt='Satellite image of " +
+        escapeHTML(card.name) + "' loading='lazy' decoding='async'>";
+    }
     var h = hashString(card.name);
     var sky = skies[h % skies.length];
     var id = "g" + h.toString(36);

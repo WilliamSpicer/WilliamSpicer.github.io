@@ -4,7 +4,7 @@ title: "Play Greenland Glacier Card Game"
 permalink: /outreach/game/
 ---
 
-<main class="gg" data-csv-url="{{ '/files/GreenlandCardData.csv' | relative_url }}" data-state="loading">
+<main class="gg" data-csv-url="{{ '/files/GreenlandCardData.csv' | relative_url }}" data-images-url="{{ '/images/glaciers/' | relative_url }}" data-state="loading">
   <header class="gg-hud">
     <a class="gg-hud__back" href="{{ '/outreach/' | relative_url }}" aria-label="Back to Outreach">&#8592;<span> Outreach</span></a>
     <h1 class="gg-hud__title">Greenland Glacier <span>Card Game</span></h1>
@@ -81,4 +81,4 @@ permalink: /outreach/game/
   </dialog>
 </main>
 
-<script src="{{ '/assets/js/glacier-top-trumps.js' | relative_url }}?v=11"></script>
+<script src="{{ '/assets/js/glacier-top-trumps.js' | relative_url }}?v=12"></script>
