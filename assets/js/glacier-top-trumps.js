@@ -199,7 +199,7 @@
     var image = glacierImages[card.name.normalize("NFC")];
     if (image) {
       return "<img src='" + escapeHTML(root.dataset.imagesUrl + image) + "' alt='Satellite image of " +
-        escapeHTML(card.name) + "' loading='lazy' decoding='async'>";
+        escapeHTML(card.name) + "' decoding='async'>";
     }
     var h = hashString(card.name);
     var sky = skies[h % skies.length];
