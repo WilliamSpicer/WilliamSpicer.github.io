@@ -13,30 +13,6 @@
     { key: "runoff (RACMO, 2015–2024, Gt)", label: "Runoff (RACMO 2015–2024, Gt)", short: "Runoff", unit: "Gt" }
   ];
 
-  // satellite picture for each card: Glacier name in the CSV -> file in images/glaciers/
-  // a glacier missing from this list gets the drawn glacier scene instead
-  var glacierImages = {
-    "Jakobshavn Isbræ": "jakobshavn-isbrae.jpg",
-    "Kangiata Nunaata Sermia": "kangiata-nunaata-sermia.jpg",
-    "Helheim Glacier": "helheim-glacier.jpg",
-    "K.I.V Steenstrup Nørdre Bræ": "kiv-steenstrup-nordre-brae.jpg",
-    "Store Glacier": "store-glacier.jpg",
-    "Petermann Glacier": "petermann-glacier.jpg",
-    "Nioghalvfjerdsbræ": "nioghalvfjerdsbrae.jpg",
-    "Køge Bugt": "koge-bugt.jpg",
-    "Harald Moltke Bræ": "harald-moltke-brae.jpg",
-    "Polonia Glacier": "polonia-glacier.jpg",
-    "Kangerlussuaq Glacier": "kangerlussuaq-glacier.jpg",
-    "Daugaard-Jensen Glacier": "daugaard-jensen-glacier.jpg",
-    "Qooqqup Sermia": "qooqqup-sermia.jpg",
-    "Tracy Glacier": "tracy-glacier.jpg",
-    "Hayes Glacier": "hayes-glacier.jpg",
-    "Saqqarliup Sermia": "saqqarliup-sermia.jpg",
-    "Isunnguata Sermia": "isunnguata-sermia.jpg",
-    "Frederikshåb Isblink": "frederikshab-isblink.jpg",
-    "Nordenskiöld Glacier": "nordenskiold-glacier.jpg"
-  };
-
   // colour of each card's frame, picked from the glacier name so it stays the same every game
   var frameColours = ["#3fb6d3", "#2d8fbf", "#4a7fd6", "#2fa39a", "#6c8fb3", "#3a9fc0", "#5a78c8", "#2a9a86"];
 
@@ -71,6 +47,16 @@
     var hash = 0;
     for (var i = 0; i < text.length; i++) hash = (hash * 31 + text.charCodeAt(i)) >>> 0;
     return hash;
+  }
+
+  // Records a game event in GoatCounter (shown in its dashboard alongside page views).
+  // Does nothing if GoatCounter hasn't loaded, e.g. blocked by an adblocker.
+  function trackEvent(name, title) {
+    try {
+      if (window.goatcounter && typeof window.goatcounter.count === "function") {
+        window.goatcounter.count({ path: name, title: title, event: true });
+      }
+    } catch (error) { /* analytics must never break the game */ }
   }
 
   function setState(state, outcome) {
@@ -170,12 +156,14 @@
             name: record.Glacier || "Unnamed glacier",
             greenlandicName: cleanText(record["Greenlandic Name"]),
             nameMeaning: cleanText(record["Greenlandic Name meaning"]),
-            fact: cleanText(record["Fun Fact"])
+            fact: cleanText(record["Fun Fact"]),
+            image: cleanText(record.Image) // file name in images/glaciers/; blank = drawn scene
           };
           categories.forEach(function (category) { card[category.key] = numberFromCSV(record[category.key]); });
           return card;
         });
         if (glacierCards.length < 2) throw new Error("At least two glacier cards are needed to play.");
+        preloadImages();
         newGameButton.disabled = false;
         setState("ready");
         setStatus(glacierCards.length + " glacier cards ready. Deal to start!");
@@ -186,7 +174,23 @@
       });
   }
 
-  /* ---------- card art: a small glacier scene, varied per card ---------- */
+  /* ---------- card art: satellite image, or a small drawn glacier scene ---------- */
+
+  function imageURL(card) {
+    return root.dataset.imagesUrl + card.image;
+  }
+
+  // download every card's picture in the background so it's cached before the card is dealt
+  var preloaded = [];
+  function preloadImages() {
+    glacierCards.forEach(function (card) {
+      if (!card.image) return;
+      var img = new Image();
+      img.decoding = "async";
+      img.src = imageURL(card);
+      preloaded.push(img); // keep a reference so the browser doesn't drop the download
+    });
+  }
 
   var skies = [
     { top: "#7cc4e4", bottom: "#e3f4fa", sea: "#1f5f7a", sun: "#fff6d6" },         // clear day
@@ -196,9 +200,8 @@
   ];
 
   function artMarkup(card) {
-    var image = glacierImages[card.name.normalize("NFC")];
-    if (image) {
-      return "<img src='" + escapeHTML(root.dataset.imagesUrl + image) + "' alt='Satellite image of " +
+    if (card.image) {
+      return "<img src='" + escapeHTML(imageURL(card)) + "' alt='Satellite image of " +
         escapeHTML(card.name) + "' decoding='async'>";
     }
     var h = hashString(card.name);
@@ -340,6 +343,8 @@
     if (player.length && computer.length) return false;
     finished = true;
     var playerWon = player.length > 0;
+    trackEvent("game-" + (playerWon ? "won" : "lost") + "-" + difficultyLevel,
+      "Glacier game " + (playerWon ? "won" : "lost") + " (" + difficultyLevel + ")");
     setState("game-over", playerWon ? "player" : "computer");
     document.getElementById("result-title").textContent = playerWon ? "You win the game!" : "The computer wins the game!";
     setStatus(playerWon ? "You collected every glacier card." : "The computer collected every glacier card.");
@@ -407,12 +412,14 @@
   // 1 = ~91%, 0.7 = ~78%, 0.5 = ~70%, 0.3 = ~62%, 0.2 = ~58%, 0 = ~50% (purely random).
   var DIFFICULTY_SKILL = { easy: 0.2, normal: 0.5, hard: 1 };
   var COMPUTER_SKILL = DIFFICULTY_SKILL.normal;
+  var difficultyLevel = "normal";
 
   // Difficulty picker: remembered in this browser, and can be changed between games.
   var difficultyInputs = document.querySelectorAll("input[name='gg-difficulty']");
   function setDifficulty(level) {
     if (!DIFFICULTY_SKILL.hasOwnProperty(level)) level = "normal";
     COMPUTER_SKILL = DIFFICULTY_SKILL[level];
+    difficultyLevel = level;
     difficultyInputs.forEach(function (input) { input.checked = input.value === level; });
     try { localStorage.setItem("gg-difficulty", level); } catch (error) { /* storage unavailable: just don't remember */ }
   }
@@ -501,6 +508,7 @@
 
   function startGame() {
     gameNumber++;
+    trackEvent("game-started-" + difficultyLevel, "Glacier game started (" + difficultyLevel + ")");
     var deck = shuffle(glacierCards.map(function (card) { return Object.assign({}, card); }));
     var half = Math.ceil(deck.length / 2);
     player = deck.slice(0, half);
