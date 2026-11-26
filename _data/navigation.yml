@@ -12,6 +12,9 @@ main:
   - title: "Publications"
     url: /publications/
 
+  - title: "Glacier Game"
+    url: /glacier-game/
+
   - title: "Outreach"
     url: /outreach/
 

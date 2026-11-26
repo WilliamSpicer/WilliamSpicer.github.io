@@ -4,7 +4,7 @@ title: "Outreach"
 permalink: /outreach/
 author_profile: true
 ---
-# [Greenland Glacier Card Game]({{ '/outreach/game/' | relative_url }})
+# [Greenland Glacier Card Game]({{ '/glacier-game/' | relative_url }})
 
 
 ## About the project
@@ -30,12 +30,13 @@ The units and full date ranges are shown on the cards. Some glaciers do not have
 
 ## How to play
 
-1. Start a game. The cards are shuffled and dealt between you and the computer.
-2. When it is your turn to choose, select a category on your card. The computer's card is revealed and the same category is compared on both cards.
-3. The higher value wins the round. The winning category row is highlighted green, and the losing category row red. The winner takes both cards and chooses the category for the next round. When it is the computer's turn to choose, it selects its highest available value (TODO: improved selection criteria).
-4. If the values tie, both cards are held for the next round. You choose the next category, and the next round's winner also collects the tied cards.
-5. The game ends when one player has all the cards. A fun fact about the winning glacier appears with the round's result; press **Next turn** when you are ready to continue.
+1. Choose a difficulty and press **Deal cards**. The cards are shuffled and split between you and the computer.
+2. On your turn, pick a category on your card that you think will beat the computer's card. The computer's card is then turned over and the same category is compared on both cards.
+3. The higher value wins the round. The chosen category is highlighted green on the winning card and red on the losing card, and a fun fact about the winning glacier appears. The winner takes both cards and chooses the category for the next round. Press **Next turn** when you are ready to continue.
+4. When the computer chooses, how well it picks depends on the difficulty: on **Easy** it often picks at random, on **Normal** it picks its strongest category about half the time, and on **Hard** it nearly always picks its strongest category.
+5. If the values tie, both cards go into a tie pile and you choose the next category. Whoever wins the next round takes the tie pile too.
+6. The game ends when one player holds every card.
 
 ## Play the game
 
-[Open Glacier Card Game]({{ '/outreach/game/' | relative_url }}) to view the cards and play against the computer.
+[Open Glacier Card Game]({{ '/glacier-game/' | relative_url }}) to view the cards and play against the computer.

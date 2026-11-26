@@ -1,12 +1,14 @@
 ---
 layout: game
 title: "Play Greenland Glacier Card Game"
-permalink: /outreach/game/
+permalink: /glacier-game/
+redirect_from:
+  - /outreach/game/
 ---
 
 <main class="gg" data-csv-url="{{ '/files/GreenlandCardData.csv' | relative_url }}" data-images-url="{{ '/images/glaciers/' | relative_url }}" data-state="loading">
   <header class="gg-hud">
-    <a class="gg-hud__back" href="{{ '/outreach/' | relative_url }}" aria-label="Back to Outreach">&#8592;<span> Outreach</span></a>
+    <a class="gg-hud__back" href="{{ '/' | relative_url }}" aria-label="Back to homepage">&#8592;<span> Home</span></a>
     <h1 class="gg-hud__title">Greenland Glacier <span>Card Game</span></h1>
     <button type="button" class="gg-hud__help" id="gg-help-open" aria-haspopup="dialog">? <span>How to play</span></button>
   </header>

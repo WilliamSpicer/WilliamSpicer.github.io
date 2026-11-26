@@ -577,6 +577,7 @@ button.gg-stat__btn:disabled { cursor: not-allowed; opacity: .45; }
   text-transform: uppercase;
   letter-spacing: .03em;
   color: #fff;
+  text-align: center;
 }
 .gg[data-outcome="player"] .gg-result__title { color: #7fe0a3; }
 .gg[data-outcome="computer"] .gg-result__title { color: #ff9e8a; }
