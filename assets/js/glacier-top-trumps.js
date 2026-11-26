@@ -70,7 +70,8 @@
 
   function showResult(title, detail, fact) {
     document.getElementById("result-title").textContent = title;
-    document.getElementById("result-detail").textContent = detail;
+    document.getElementById("result-detail").textContent = detail || "";
+    document.getElementById("result-detail").hidden = !detail;
     document.getElementById("result-fact").textContent = fact || "";
     document.getElementById("result-fact-row").hidden = !fact;
     resultPanel.hidden = false;
@@ -356,13 +357,6 @@
 
   function finishRound(winner, category) {
     var winningCard = winner === "player" ? player[0] : computer[0];
-    var losingCard = winner === "player" ? computer[0] : player[0];
-    var playerValue = player[0][category.key];
-    var computerValue = computer[0][category.key];
-    var winningValue = winner === "player" ? playerValue : computerValue;
-    var losingValue = winner === "player" ? computerValue : playerValue;
-    var comparison = winningCard.name + " beats " + losingCard.name + " on " + category.label + ": " +
-      formatValue(winningValue) + " vs " + formatValue(losingValue) + ".";
 
     showCards(true, category.key, winner);
     (winner === "player" ? playerCardEl : computerCardEl).classList.add("is-round-winner");
@@ -370,20 +364,19 @@
 
     var playerCard = player.shift(), computerCard = computer.shift();
     var winnings = tiePile.concat([playerCard, computerCard]);
-    var bonus = tiePile.length ? " plus " + tiePile.length + " cards from the tie pile" : "";
     tiePile = [];
 
     if (winner === "player") {
       player.push.apply(player, winnings);
       setState("round-over", "player");
       setStatus("You chose " + category.short + ".");
-      showResult("You win the round!", comparison + " You take the " + losingCard.name + " card" + bonus + ".", winningCard.fact);
+      showResult("You win the round!", "", winningCard.fact);
       playerLeads = true;
     } else {
       computer.push.apply(computer, winnings);
       setState("round-over", "computer");
       setStatus((playerLeads ? "You chose " : "The computer chose ") + category.short + ".");
-      showResult("Computer wins the round", comparison + " The computer takes your " + losingCard.name + " card" + bonus + ".", winningCard.fact);
+      showResult("Computer wins the round", "", winningCard.fact);
       playerLeads = false;
     }
     updateCounts();
