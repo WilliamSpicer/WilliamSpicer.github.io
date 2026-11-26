@@ -79,6 +79,7 @@ redirect_from:
       <li>The game ends when one player holds every card.</li>
     </ol>
     <p class="gg-dialog__note">All values and facts come from the glacier data sheet. A stat with no data is greyed out and can't be picked for that round.</p>
+    <p class="gg-dialog__note">Glacier images contain modified Copernicus Sentinel data, processed by ESA.</p>
     <form method="dialog"><button class="gg-btn gg-btn--primary" type="submit">Got it</button></form>
   </dialog>
 </main>
